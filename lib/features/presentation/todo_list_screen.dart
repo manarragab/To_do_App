@@ -77,8 +77,8 @@ Card(
   child: Row(children: [
 Column(children: [
   //Text("Weight: ${controller.postBmi.weight}"),
-Text(" ${controller.alarms[index].title}"),
 Text(" ${controller.alarms[index].description}"),
+//Text(" ${controller.ala.description}"),
 
 ],),
 IconButton(onPressed: (){

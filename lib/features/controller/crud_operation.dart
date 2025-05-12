@@ -35,10 +35,11 @@ class UserRepo {
     return responseData;
   }
 
+
   static Future<PostAlarmResponse> addAlarm(PostAlarm alarm) async {
-final data = await alarm.toJson(); 
-final response = await _api.post('/user/alarms', data ,
-);
+
+    final response = await _api.post('/user/alarms', alarm.toJson()); //this is done correctly as it print
+print(",,,,,,,,,,,,,,,,,,,,,,,, $response");
     final responseData = PostAlarmResponse.fromJson(response.data);
     print("response:-  ${response.data}");
     return responseData;
@@ -48,6 +49,8 @@ final response = await _api.post('/user/alarms', data ,
     final response = await _api.put('/user/alarms/$id', post.toJson());
     return Alarms.fromJson(response.data);
   }
+
+
 
   static Future<void> deleteData(int id) async {
     await _api.delete('/posts/$id');

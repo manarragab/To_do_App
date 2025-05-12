@@ -100,19 +100,20 @@ Future<void> fetchFamily() async {
 
 
 PostAlarm ala=PostAlarm();
+
+List<PostAlarm> xx=[];
  PostAlarmResponse response=PostAlarmResponse();
 Future<void> addAlarm() async{
   try {
      ala =PostAlarm(
       title: titleController.text,
       description: descController.text,
-      isRepeatable: true,
-medicineStartDate: "2025-05-16",
+     
 type: "hh",alarmTime: "03:00",
 alarmDate: "2025-04-17",
-medicineEndDate: "2025-04-20",
 
      );
+      xx.assignAll([ala]);
     response =  await UserRepo.addAlarm(ala); 
        Get.to(TodoListScreen());
                update();

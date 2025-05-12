@@ -10,34 +10,26 @@ class DioApiService {
   DioApiService({required this.baseUrl, this.token}) {
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl,
-      
       headers: {
-        
         'Content-Type': 'application/json',
+        'Accept': 'application/json', 
         if (token != null) 'Authorization': 'Bearer $token',
       },
       followRedirects: false,
-      
+      validateStatus: (status) => status != null && status < 500,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
     ));
 
     _dio.interceptors.add(PrettyDioLogger(
-  requestHeader: true,
-  requestBody: true,
-  responseBody: true,
-  responseHeader: false,
-  error: true,
-  compact: true,
-  maxWidth: 90,
-  
-));
-    options: Options(
-      headers: {
-        'Accept': 'application/json', 
-      },
-    );
-
+      requestHeader: true,
+      requestBody: true,
+      responseBody: true,
+      responseHeader: false,
+      error: true,
+      compact: true,
+      maxWidth: 90,
+    ));
   }
 
   Future<Response> get(String endpoint) async {
@@ -82,12 +74,5 @@ class DioApiService {
     }
     return 'خطأ غير متوقع: $error';
   }
-
-  
 }
-
-void printRequestData(Map<String, dynamic> data) {
-  data.forEach((key, value) {
-    print('$key: $value');
-  });
-}
+ 

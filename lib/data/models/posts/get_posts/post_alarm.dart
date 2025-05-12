@@ -12,63 +12,46 @@ import 'package:http_parser/http_parser.dart';
 /// is_repeatable : "1"
 
 class PostAlarm {
-
-  
-  PostAlarm({
-    this.image,
-    this.type,
-    this.title,
-    this.description,
-    this.medicineStartDate,
-    this.medicineEndDate,
-    this.isRepeatable = false,
-    this.alarmTime,
-    this.alarmDate
-  });
-
-  PostAlarm.fromJson(dynamic json) {
-    id = json['id'];
-    type = json['type'];
-    title = json['title'];
-    imageData = json['image_path'];
-    alarmDate = json["alarm_date"];
-    alarmTime = json['alarm_time'];
-    description = json['description'];
-    medicineStartDate = json['medicine_start_date'];
-    medicineEndDate = json['medicine_end_date'];
-    isRepeatable = json['is_repeatable'] == "1";
-  }
-
-  String? imageData;
-  File? image;
   String? type;
   String? title;
   String? description;
-  String? medicineStartDate;
-  String? medicineEndDate;
-  bool isRepeatable = false;
-
   String? alarmDate;
-
   String? alarmTime;
-
+  String? image;
+  int? userId;
+  String? updatedAt;
+  String? createdAt;
   int? id;
 
-  Future<Map<String, dynamic>> toJson() async {
-    final map = <String, dynamic>{};
-    if (image != null) {
-      final mimeType = lookupMimeType(image!.path) ?? 'application/octet-stream'; // Detect file type
-      final mediaType = MediaType.parse(mimeType); // Convert to MediaType
-      map['image'] = await MultipartFile.fromFile(image!.path,contentType: mediaType);
-    }
-    map['type'] = type;
-    map['title'] = title;
-    map['description'] = description;
-    map['alarm_date'] = alarmDate;
-    map['alarm_time'] = alarmTime;
-    map['medicine_start_date'] = medicineStartDate ?? alarmDate;
-    map['medicine_end_date'] = medicineEndDate;
-    map['is_repeatable'] = isRepeatable ? "1" : "0";
-    return map;
+  PostAlarm({this.type, this.title, this.description, this.alarmDate, this.alarmTime, this.image, this.userId, this.updatedAt, this.createdAt, this.id});
+
+  PostAlarm.fromJson(Map<String, dynamic> json) {
+    type = json["type"];
+    title = json["title"];
+    description = json["description"];
+    alarmDate = json["alarm_date"];
+    alarmTime = json["alarm_time"];
+    image = json["image"];
+    userId = json["user_id"];
+    updatedAt = json["updated_at"];
+    createdAt = json["created_at"];
+    id = json["id"];
+  }
+
+
+//I converted it into Map already , from 10 minutes , but same error
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> _data = <String, dynamic>{};
+    _data["type"] = type;
+    _data["title"] = title;
+    _data["description"] = description;
+    _data["alarm_date"] = alarmDate;
+    _data["alarm_time"] = alarmTime;
+    _data["image"] = image;
+    _data["user_id"] = userId;
+    _data["updated_at"] = updatedAt;
+    _data["created_at"] = createdAt;
+    _data["id"] = id;
+    return _data;
   }
 }

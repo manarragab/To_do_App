@@ -77,7 +77,7 @@ return Switch(value: controller.isTapped.value, onChanged: (val){
                             onPressed: () async{
 
                               controller.addAlarm();
-                       //   await controller.createTodo();
+                              
                           }, child: Text("Add" , style: TextStyle(color: Colors.white),)),
                         )
 
