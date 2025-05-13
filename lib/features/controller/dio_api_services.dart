@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -41,8 +43,11 @@ class DioApiService {
   }
 
   Future<Response> post(String endpoint, Map<String, dynamic> data) async {
+    
     try {
-      return await _dio.post(endpoint, data: data);
+      print("yyyyyyyyyyyyyyyyyyyyyyyyy $data");
+      return await _dio.post(endpoint, data: jsonEncode(data));
+      
     } catch (e) {
       throw _handleError(e);
     }

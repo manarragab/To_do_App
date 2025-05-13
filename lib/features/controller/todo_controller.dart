@@ -1,3 +1,11 @@
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command 🌟 >>>>>>>>>>>>>>>> */
+/// A controller for managing alarms.
+///
+/// This class provides methods for fetching alarms, adding a new alarm,
+/// editing an existing alarm, and deleting an alarm.
+///
+/// The [alarms] list is observable and is updated when the data is fetched
+/// successfully.
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,21 +29,18 @@ import 'package:to_do_app/features/presentation/todo_list_screen.dart';
 
 // var isTapped=false.obs;
 
-
-// // List<Alarms> postsList = [];  
+// // List<Alarms> postsList = [];
 
 // //   Future<void> fetchAlarms() async {
 // //     final fetchedPosts = await DioHelper.getList<Alarms>(
-// //       endpoint: "/user/family", 
+// //       endpoint: "/user/family",
 // //       fromJson: (json) => Alarms.fromJson(json),
 // //       rootKey: "data"
 // //     );
 
-// //     postsList = fetchedPosts; 
-// //     update(); 
+// //     postsList = fetchedPosts;
+// //     update();
 // //   }
-
-
 
 // // List<Posts> postsList = [];
 
@@ -49,7 +54,6 @@ import 'package:to_do_app/features/presentation/todo_list_screen.dart';
 // //   postsList = fetchedPosts .toList()  ?? [];
 // //   update();
 // // }
-
 
 // final api = DioApiService(
 //   baseUrl: 'https://gorest.co.in/public/v2',
@@ -68,101 +72,210 @@ import 'package:to_do_app/features/presentation/todo_list_screen.dart';
 // // DELETE
 // //await api.delete('users/1');
 
-
-
-
-
 // }
 
+class TodoController extends GetxController {
+  /// Whether the loading animation is visible.
+  ///
+  /// This variable is used to show or hide the loading animation when fetching
+  /// data.
+  bool isLoading = false;
 
-class TodoController extends GetxController{
+  /// A list of alarms.
+  ///
+  /// This list is observable and is updated when the data is fetched successfully.
+  @override
+  void onInit() {
+    super.onInit();
+    fetchFamily(); // call only once when controller is initialized
+  }
 
+  TextEditingController numberController = TextEditingController();
 
-TextEditingController titleController=TextEditingController();
-TextEditingController descController=TextEditingController();
-TextEditingController numberController=TextEditingController();
+  List<Alarms> alarms = [];
 
-var isTapped=false.obs;
+  /// A [TextEditingController] for a text field to input the alarm title.
+  ///
+  /// This controller is used to pre-fill the title of the alarm when editing.
+  final titleController = TextEditingController();
 
-List<Alarms> alarms=[];
+  /// A [TextEditingController] for a text field to input the alarm description.
+  ///
+  /// This controller is used to pre-fill the description of the alarm when editing.
+  final descController = TextEditingController();
 
-Future<void> fetchFamily() async {
+  /// Fetches the list of alarms.
+  ///
+  /// This method calls [UserRepo.fetchData] and assigns the result to [alarms].
+  Future<void> fetchFamily() async {
     try {
-      final data = await UserRepo.fetchData(); 
-      alarms.assignAll(data.data??[] );
-       update();
+      final data = await UserRepo.fetchData();
+      alarms.assignAll(data.data ?? []);
+      update();
     } catch (e) {
       print('GET error: $e');
-    } 
-   
+    }
   }
 
+  /// Adds a new alarm.
+  ///
+  /// This method calls [UserRepo.addData] and adds the new alarm to the top of
+  /// the [alarms] list.
+  List<PostAlarm> postAlarms = [];
 
+  PostAlarmResponse response = PostAlarmResponse();
 
-PostAlarm ala=PostAlarm();
+  PostBmiMd postBmi = PostBmiMd();
+  ResponseBmi responsee = ResponseBmi();
 
-List<PostAlarm> xx=[];
- PostAlarmResponse response=PostAlarmResponse();
-Future<void> addAlarm() async{
-  try {
-     ala =PostAlarm(
-      title: titleController.text,
-      description: descController.text,
-     
-type: "hh",alarmTime: "03:00",
-alarmDate: "2025-04-17",
+  Future<void> addFamily() async {
+    try {
+      // final postBmi = PostBmiMd(
+      // postBmi = PostBmiMd(
+      //     weight: int.tryParse(numberController.text),
+      //     height: 175,
+      //     add_to_profile: true); // Example data
+      // await UserRepo.addData(postBmi);
+      // responsee = await UserRepo.addData(postBmi);
 
-     );
-      xx.assignAll([ala]);
-    response =  await UserRepo.addAlarm(ala); 
-       Get.to(TodoListScreen());
-               update();
-     } catch (e) {
+      update();
+    } catch (e) {
       print('POST error: $e');
-    } 
-   
-}
+    }
+  }
 
+  /// Edits an alarm.
+  Alarm alarm = Alarm();
+  Alarms updatedAlarm = Alarms();
 
-PostBmiMd  postBmi=PostBmiMd ();
-ResponseBmi responsee=ResponseBmi();
+  /// Edit an alarm
+  ///
+  /// This method navigates to [AddTodoScreen] with the alarm at [index] as an
+  /// argument. When the screen is popped, the alarm at [index] is updated with
+  /// the returned value.
+  /// This function navigates to [AddTodoScreen] with the alarm at [index] as
+  /// an argument. When the screen is popped, the alarm at [index] is updated
+  /// with the returned value.
+  ///
+  /// [index] is the index of the alarm to edit in the [alarms] list.
+  void editAlarm(int index) async {
+    Alarms arg = await Get.to(AddTodoScreen(), arguments: alarms[index]);
+    alarms[index] = arg;
+    update();
+  }
 
-Future<void> addFamily() async{
-  try {
-     postBmi = PostBmiMd(
-          weight: int.tryParse(numberController.text), height: 175, add_to_profile: true); // Example data
-      await UserRepo.addData(postBmi); 
-       responsee = await UserRepo.addData(postBmi);
-     
-        update();
-     } catch (e) {
-      print('POST error: $e');
-    } 
-   
-}
+  /// Deletes an alarm.
+  /// Shows a confirmation dialog to delete an alarm at [index].
+  ///
+  /// This method shows a confirmation dialog to delete an alarm at [index].
+  /// When the "Yes" button is pressed, it deletes the alarm using
+  /// [UserRepo.deleteData] and removes the alarm from the [alarms] list.
+  ///
+  /// [index] is the index of the alarm to delete in the [alarms] list.
+  void deleteAlarm(int index) async {
+    showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return GetBuilder<TodoController>(builder: (context) {
+          return AlertDialog(
+              icon: isLoading == true
+                  ? Center(child: const CircularProgressIndicator())
+                  : null,
+              title: const Text("Delete Confirmation"),
+              content:
+                  const Text("Are you sure you want to delete this alarm?"),
+              actions: [
+                TextButton(
+                    onPressed: isLoading == true
+                        ? null
+                        : () {
+                            Get.back();
+                          },
+                    child: const Text("No")),
+                TextButton(
+                    onPressed: isLoading == true
+                        ? null
+                        : () async {
+                            try {
+                              // Start loading state
+                              isLoading = true;
+                              update();
 
-Alarm alarm=Alarm();
-Alarms updatedAlarm = Alarms();
+                              // Perform delete operation
+                              await UserRepo.deleteData(alarms[index].id!);
 
-Future<void> updateAlarm() async {
-  try {
-   fetchFamily();
+                              // End loading state
+                              isLoading = false;
+                              update();
 
-    updatedAlarm = Alarms(
-   
-      title: titleController.text,
-      description: descController.text,
+                              // Close the dialog
+                              Get.back();
+
+                              // Remove the alarm from the list
+                              alarms.removeAt(index);
+                              update();
+                            } catch (e) {
+                              print('DELETE error: $e');
+                            }
+                          },
+                    child: const Text("Yes")),
+              ]);
+        });
+      },
     );
-
-    update(); 
-    Get.to(AddTodoScreen());
-
-  } catch (e) {
-    print('UPDATE error: $e');
   }
+
+  /// Navigates to the AddTodoScreen and adds a new alarm if data is returned.
+  ///
+  /// When navigating back from the [AddTodoScreen], if the returned data is of
+  /// type [PostAlarmResponse], the new alarm is added to the top of the [alarms]
+  /// list and the UI is updated.
+  /// type [PostAlarmResponse], the new alarm is added to the top of the [alarms] list
+  /// and the UI is updated.
+  void goToAddScreen() async {
+    var data = await Get.to(
+      AddTodoScreen(),
+    );
+    if (data is PostAlarmResponse) {
+      alarms.insert(0, data.data!);
+      update();
+    }
+  }
+/*
+  Future<void> updateAlarm(Alarms alarmToEdit, id) async {
+    try {
+      // Pre-fill fields for editing (optional)
+      titleController.text = alarmToEdit.title ?? "";
+      descController.text = alarmToEdit.description ?? "";
+
+      Alarms updated = Alarms(
+        id: id,
+        title: titleController.text,
+        description: descController.text,
+        alarmDate: alarmToEdit.alarmDate,
+        alarmTime: alarmToEdit.alarmTime,
+        type: alarmToEdit.type,
+      );
+
+      await UserRepo.updateData(id, updated);
+      await fetchFamily();
+      update();
+
+      Get.to(AddTodoScreen()); // or Get.back()
+    } catch (e) {
+      print('UPDATE error: $e');
+    }
+  }
+
+  Future<void> deleteAlarm(int id) async {
+    try {
+      await UserRepo.deleteData(id);
+      await fetchFamily();
+      update();
+    } catch (e) {
+      print('DELETE error: $e');
+    }
+  }*/ //TODO: reuse this function
 }
 
-
-
-}
-
+/* <<<<<<<<<<  49345964-5529-4561-977b-7f9c50468edb  >>>>>>>>>>> */

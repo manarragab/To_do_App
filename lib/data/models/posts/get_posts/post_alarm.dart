@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -23,6 +24,9 @@ class PostAlarm {
   String? createdAt;
   int? id;
 
+
+  
+
   PostAlarm({this.type, this.title, this.description, this.alarmDate, this.alarmTime, this.image, this.userId, this.updatedAt, this.createdAt, this.id});
 
   PostAlarm.fromJson(Map<String, dynamic> json) {
@@ -42,7 +46,7 @@ class PostAlarm {
 //I converted it into Map already , from 10 minutes , but same error
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> _data = <String, dynamic>{};
-    _data["type"] = type;
+    _data["type"] = "medicine";
     _data["title"] = title;
     _data["description"] = description;
     _data["alarm_date"] = alarmDate;
@@ -52,6 +56,13 @@ class PostAlarm {
     _data["updated_at"] = updatedAt;
     _data["created_at"] = createdAt;
     _data["id"] = id;
+    _data["is_repeatable"] = 0;
+    _data["medicine_start_date"] = "2025-04-17";
+
+
+
+    log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb$_data");
+    
     return _data;
   }
 }

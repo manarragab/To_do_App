@@ -4,8 +4,14 @@ class Alarm {
   int? status;
   String? message;
 
-  Alarm({this.data, this.status, this.message});
+  /// The status code of the response
 
+  Alarm({this.data, this.status, this.message});
+@override
+  String toString() {
+    // TODO: implement toString
+    return 'Alarm(data: $data, status: $status, message: $message)';
+  }
   Alarm.fromJson(Map<String, dynamic> json) {
     data = json["data"] == null ? null : (json["data"] as List).map((e) => Alarms.fromJson(e)).toList();
     status = json["status"];
@@ -41,7 +47,10 @@ class Alarms {
   String? imagePath;
 
   Alarms({this.id, this.userId, this.type, this.title, this.description, this.alarmDate, this.alarmTime, this.isRepeatable, this.medicineStartDate, this.medicineEndDate, this.image, this.isTriggered, this.createdAt, this.updatedAt, this.imagePath});
-
+  @override
+  String toString() {
+    return 'Alarms(id: $id, userId: $userId, type: $type, title: $title, description: $description, alarmDate: $alarmDate, alarmTime: $alarmTime, isRepeatable: $isRepeatable, medicineStartDate: $medicineStartDate, medicineEndDate: $medicineEndDate, image: $image, isTriggered: $isTriggered, createdAt: $createdAt, updatedAt: $updatedAt, imagePath: $imagePath)';
+  }
   Alarms.fromJson(Map<String, dynamic> json) {
     id = json["id"];
     userId = json["user_id"];
