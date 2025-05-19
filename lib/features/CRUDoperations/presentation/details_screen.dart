@@ -53,14 +53,20 @@ class DetailsScreen extends GetView<CrudController> {
             SizedBox(height: 15),
             CustomTextField.dateField(
                 controller: controller.dateController,
-                onChanged: (val) {},
-              
+                onChanged: (val) {
+                  controller.dateController.text = details[2];
+                },
+              notPress: true,
                 color: CustomColors.lightPurple),
             SizedBox(height: 15),
             CustomTextField.dropDownField(
+            
                 controller: controller.dropDownController,
-               onChanged: (val) {},
+               onChanged: (val) {
+                controller.dropDownController.text = details[3];
+               },
                 color: CustomColors.lightPurple,
+                notPress: true,
                 suffixIcon: ImagesPath.downArrow,
                 hint: "Status",
                 items: List.generate(Status.values.length, (index) {
@@ -70,9 +76,9 @@ class DetailsScreen extends GetView<CrudController> {
             CustomTextField.dropDownField(
               controller: controller.dropDownController2,
               onChanged: (val) {
-                controller.dropDownController2.text = val;
+                controller.dropDownController2.text = details[4];
               },
-          
+          notPress: true,
               color: CustomColors.lightPurple,
               suffixIcon: ImagesPath.downArrow,
               hint: "Level",

@@ -9,7 +9,6 @@ class Alarm {
   Alarm({this.data, this.status, this.message});
 @override
   String toString() {
-    // TODO: implement toString
     return 'Alarm(data: $data, status: $status, message: $message)';
   }
   Alarm.fromJson(Map<String, dynamic> json) {

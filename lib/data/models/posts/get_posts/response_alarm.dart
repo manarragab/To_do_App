@@ -10,12 +10,6 @@ class PostAlarmResponse {
     this.status,
     this.message,
   });
-  @override
-  String toString() {
-    // TODO: implement toString
-    return 'PostAlarmResponse(data: $data, status: $status, message: $message)';
-  }
-
   factory PostAlarmResponse.fromJson(dynamic json) {
     return PostAlarmResponse(
       data: json['data'] == null ? null : Alarms.fromJson(json['data']),

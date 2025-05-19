@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -5,7 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:to_do_app/core/Dio_API_services/crud_operation.dart';
 import 'package:to_do_app/core/routes/custom_pages.dart';
+import 'package:to_do_app/data/models/tasks/get_tasks/get_task.dart';
+import 'package:to_do_app/data/models/tasks/post_task/post_task.dart';
+import 'package:to_do_app/data/models/tasks/post_task/response_post_task.dart';
 
 
 class CrudController extends GetxController {
@@ -19,63 +24,49 @@ class CrudController extends GetxController {
 
   var isLoading = false.obs;
   Rx<File?> selectedImage = Rx<File?>(null);
+  String? image;
 
-  Dio dio = Dio();
-  String token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODFmYzg5MzE5ZjQ4YjMwZGQxOGQzMTYiLCJpYXQiOjE3NDY5MTM0NzF9.thKHRKwIEPx7ErUji8-TCzOTMA1oAfrxTEhJo69mqz4";
-  
-  String get formattedDate {
+ ResponsePostTask? res ;
+//get
+  List<Tasks> tasks = [];
+  Future<void> fetchTasks() async {
     try {
-      return DateFormat('yyyy-MM-dd').format(
-        DateFormat('dd/MMM/yyyy').parse(dateController2.text),
-      );
+      final data = await UserRepo.getTask();
+      tasks.assignAll(data );
+      print("responseeeeeeeeeeeeeee:-  ${data}");
+      update();
     } catch (e) {
-      print("Date format error: $e");
-      return ""; 
+      print('GET error: $e');
     }
   }
 
-  Future<void> send() async {
-    isLoading.value = true;
-    await Future.delayed(Duration(seconds: 2));
-    isLoading.value = false;
-    Get.toNamed(CustomPages.home);
-  }
 
-  Future<void> postTask() async {
-    isLoading.value = true;
-    await Future.delayed(Duration(seconds: 2));
-    final url = "https://todo.iraqsapp.com/todos";
-
-    final data = {
-      "image": selectedImage.value?.path ?? "",
-      "title": titleController.text,
-      "desc": descController.text,
-      "priority": dropDownController2.text,
-      "dueDate": formattedDate, 
-    };
-
-
-    final response = await dio.post(
-      url,
-      data: data,
-      options: Options(
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
-      ),
+PostTask? postTask;
+Future<void> addTask() async {
+ 
+  //isEdit = false;
+   try{
+     postTask = PostTask(
+      title: titleController.text,
+      desc: descController.text,
+      priority: dropDownController2.text,
+      dueDate: dateController2.text,
+      image: selectedImage.value!.path ??"",
     );
-    
+  Tasks   res = await UserRepo.addTask(postTask!);
+tasks.insert(0, res);
+  await fetchTasks();
+    update();
+     Get.back();
+    // titleController.clear();
+    // descController.clear();
+   
+   }
 
-    print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq ${selectedImage} , ${ titleController.text}, ${descController.text},${dropDownController2.text}, ${ selectedImage.value?.path }");
-    isLoading.value = false;
-    Get.toNamed(CustomPages.home);
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      print("✅ Todo created successfully!");
-      print(response.data);
-    } else {
-      print("❌ Failed: ${response.statusCode}");
-      print(response.data);
-    }
+catch(e){
+    print("POST error: $e");
+   }
   }
+
+
 }

@@ -7,25 +7,28 @@ import 'package:to_do_app/core/images/custom_images.dart';
 import 'package:to_do_app/core/images/images_path.dart';
 import 'package:to_do_app/core/routes/custom_pages.dart';
 import 'package:to_do_app/core/text/custom_text.dart';
+import 'package:to_do_app/features/CRUDoperations/controller/crud_controller.dart';
 
 class CustomCard extends StatelessWidget {
   final String? status;
-  final Color? textColor;
-  final Color? backgroundColor;
   final String? path;
-    final Color? textStatusColor;
-
-  
-  const CustomCard({super.key, this.status, this.textColor, this.backgroundColor, this.path, this.textStatusColor});
+final String title;
+  final String desc;
+final String priority;
+final String date;
+  const CustomCard({super.key, this.status, this.path, required this.title, required this.desc, required this.priority, required this.date});
   
   @override
   Widget build(BuildContext context) {
+   
     return Container(
       padding: EdgeInsets.all(10),
     
       child: Row(
         children: [
-          CustomImages.assetImage(ImagesPath.baskett , width: 50, height: 50),
+         
+         
+          CustomImages.assetImage(path?? ImagesPath.baskett , width: 50, height: 50),
           SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -38,7 +41,7 @@ class CustomCard extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: Get.width /2.5,
-                      child: Text('Grocery Shopping App',
+                      child: Text(title??'Grocery Shopping App',
                           overflow: TextOverflow.ellipsis,
                           style: CustomText.textStyle1(
                               fontSize: 16,
@@ -50,7 +53,7 @@ class CustomCard extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 10 , vertical: 5),
                       
                       decoration: BoxDecoration(
-                        color: backgroundColor?? CustomColors.lightPurple,
+                        color:status=="waiting"?CustomColors.lightpink:status=="finished"?CustomColors.lightblue: CustomColors.lightPurple,
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Center(
@@ -58,7 +61,7 @@ class CustomCard extends StatelessWidget {
                             style: CustomText.textStyle1(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color:textColor?? CustomColors.balckk)),
+                                color: CustomColors.balckk)),
                       ),
                     ),
                                       //SizedBox(width: 15),
@@ -98,10 +101,10 @@ class CustomCard extends StatelessWidget {
     Future.delayed(Duration.zero, () {
       Get.toNamed(CustomPages.details, arguments: [
         ImagesPath.baskett,
-        'Grocery Shopping App',
-                      'This application is designed for super shops. By using this application they can enlist all their products in one place and can deliver. Customers will get a one-stop solution for their daily shopping.',
-        'Low',
-        '7/3/2002',
+        title,
+desc,
+      priority,
+        date
       ]);
     });
   },
@@ -116,7 +119,8 @@ class CustomCard extends StatelessWidget {
                 SizedBox(
                   width: Get.width/1.5,
                   child: Text(
-                      'This application is designed for super shops. By using this application they can enlist all their products in one place and can deliver. Customers will get a one-stop solution for their daily shopping.',
+
+desc??"",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: CustomText.textStyle1(
@@ -132,17 +136,17 @@ class CustomCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          CustomImages.svgImage( path?? ImagesPath.purple),
+                          CustomImages.svgImage(priority == 'high' ? ImagesPath.orange :priority == 'low' ? ImagesPath.blue: ImagesPath.purple),
                           SizedBox(width: 5),
-                          Text('Low',
+                          Text(  priority,
                               style: CustomText.textStyle1(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: textStatusColor?? Colors.blue,
+                                color:priority == 'high' ? Colors.orange :priority == 'low' ? Colors.blue: Colors.deepPurple,
                               )),
                         ],
                       ),
-                      Text('7/3/2002',
+                      Text( date??'7/3/2002',
                           style: CustomText.textStyle1(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,

@@ -4,7 +4,7 @@ import 'package:to_do_app/features/CRUDoperations/presentation/details_screen.da
 import 'package:to_do_app/features/auth/presentation/login_screen.dart';
 import 'package:to_do_app/features/auth/presentation/register_screen.dart';
 import 'package:to_do_app/features/home/presentation/home_screen.dart';
-import 'package:to_do_app/features/presentation/todo_list_screen.dart';
+import 'package:to_do_app/features/test_API/controller/presentation/todo_list_screen.dart';
 import 'package:to_do_app/features/profile/presentation/profile_screen.dart';
 import 'package:to_do_app/features/splash/presentation/splash2_screen.dart';
 import 'package:to_do_app/features/splash/presentation/splash_screen.dart';
@@ -30,6 +30,7 @@ class CustomPages {
     GetPage(
       name: splash2,
       page: () =>Splash2Screen(),
+       binding: TodoBinding(),
     ),
 
   GetPage(

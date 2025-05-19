@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_app/core/colors/custom_colors.dart';
-import 'package:to_do_app/core/enums/enums.dart';
 import 'package:to_do_app/core/images/custom_images.dart';
 import 'package:to_do_app/core/images/images_path.dart';
 import 'package:to_do_app/core/text/custom_text.dart';
@@ -141,7 +140,7 @@ class CustomTextField {
     required TextEditingController controller,
     final String? hint,
     required Function(String) onChanged,
-    final bool? isTitle,
+    final bool? isTitle=false,
   }) {
     return TextFormField(
       validator: isTitle!? Validation.titleValidator: Validation.nameValidator,
@@ -174,6 +173,7 @@ class CustomTextField {
     final Color? color,
     final String? suffixIcon,
     final bool border=false,
+    final bool notPress=false,
   }) {
     return TextFormField(
       controller: controller,
@@ -213,7 +213,7 @@ class CustomTextField {
       //     onChanged(selected);
       //   }
       // },
-      onTap: () async {
+      onTap: notPress  ? null: () async {
   final selected = await showModalBottomSheet<String>(
     
     context: Get.context!,
@@ -317,9 +317,10 @@ class CustomTextField {
     final String? hint,
     required Function(String) onChanged,
     final Color? color,
+    final bool notPress=false,
   }) {
     return TextFormField(
-onTap: () {
+onTap:notPress  ? null: () {
   showDatePicker(
     context: Get.context!,
     initialDate: DateTime.now(),
@@ -327,7 +328,8 @@ onTap: () {
     lastDate: DateTime(2100),
   ).then((value) {
     if (value != null) {
-      final formatted = DateFormat('dd/MMM/yyyy').format(value);
+     // final formatted = DateFormat('dd/MMM/yyyy').format(value); 
+      final formatted = DateFormat('yyyy-MM-dd').format(value);
       controller.text = formatted;
       onChanged(formatted);
     }

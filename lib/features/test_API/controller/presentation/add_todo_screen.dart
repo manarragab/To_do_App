@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:to_do_app/features/controller/add_controller.dart';
-import 'package:to_do_app/features/controller/todo_controller.dart';
+import 'package:to_do_app/features/test_API/controller/todo_controller.dart';
 
 class AddTodoScreen extends StatefulWidget {
   const AddTodoScreen();
@@ -11,24 +10,17 @@ class AddTodoScreen extends StatefulWidget {
 }
 
 class _AddTodoScreenState extends State<AddTodoScreen> {
-  late AddController addController;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    addController = Get.put(AddController());
-  }
+  TodoController cont = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    addController.fillAlarm();
+    // addController.fillAlarm();
     return Scaffold(
       backgroundColor: Colors.deepPurple[100],
       appBar: AppBar(
-        title: GetBuilder<AddController>(builder: (context) {
+        title: GetBuilder<TodoController>(builder: (context) {
           return Text(
-            addController.isAddStatus ? "Add note" : "Update note",
+            "Add note",
             style: TextStyle(color: Colors.deepPurple),
           );
         }),
@@ -47,7 +39,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
               children: [
                 Expanded(
                   child: TextFormField(
-                    controller: addController.titleController,
+                    controller: cont.titleController,
                     decoration: InputDecoration(
                         hintText: "title",
                         border: OutlineInputBorder(
@@ -63,10 +55,9 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                 ),
                 Obx(() {
                   return Switch(
-                      value: addController.isTapped.value,
+                      value: cont.isTapped.value,
                       onChanged: (val) {
-                        addController.isTapped.value =
-                            !addController.isTapped.value;
+                        cont.isTapped.value = !cont.isTapped.value;
                       });
                 })
               ],
@@ -77,7 +68,14 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
             TextFormField(
               keyboardType: TextInputType.multiline,
               maxLines: 5,
-              controller: addController.descController,
+              validator: (value){
+                if(value!.length<5){
+                  return "enter 5 characters";
+                }
+                return null;
+              
+              },
+              controller: cont.descController,
               decoration: InputDecoration(
                   hintText: "description",
                   border: OutlineInputBorder(
@@ -91,27 +89,25 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
               height: 30,
             ),
             Container(
-              width: 20,
-              child: ElevatedButton(
+                width: 20,
+                child: ElevatedButton(
                   style: ButtonStyle(
                       elevation: WidgetStatePropertyAll(5),
                       backgroundColor: WidgetStatePropertyAll(
                         Colors.deepPurple[400],
                       )),
                   onPressed: () async {
-                    if (addController.isAddStatus==false) {
-                      addController.editAlarm();
+                    if (cont.isEdit) {
+                      cont.updateAlarmFromForm();
                     } else {
-                      await addController.addAlarm();
+                      cont.addAlarm();
                     }
                   },
-                  child: GetBuilder<AddController>(builder: (context) {
-                    return Text(
-                      addController.isAddStatus ? "send" : "update",
-                      style: TextStyle(color: Colors.white),
-                    );
-                  })),
-            )
+                  child: Text(
+                    "send",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )),
           ],
         ),
       ),

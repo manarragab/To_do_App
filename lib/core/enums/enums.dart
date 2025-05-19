@@ -1,10 +1,9 @@
 
   enum UserLevel {
-    beginner,
-    intermediate,
-    advanced,
-    expert,
-    admin,
+    fresh,
+    junior,
+    midLevel,
+    senior,
   }
 
 enum Status {

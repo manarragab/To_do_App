@@ -33,6 +33,7 @@ class AddTaskScreen extends GetView<CrudController> {
                   final pickedFile = await Pick.pickImage(context);
                   if (pickedFile != null) {
                     controller.selectedImage.value = pickedFile;
+                    controller.update();
                   }
                 },
                 child: DottedBorder(
@@ -130,7 +131,7 @@ class AddTaskScreen extends GetView<CrudController> {
                   text: "Add Task",
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      controller.postTask();
+                      controller.addTask();
                      // controller.send();
                     } else {
                       print("Form not valid");

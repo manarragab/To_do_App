@@ -38,19 +38,25 @@ class Validation {
 
 
 
-
-  static String? phoneNumberValidator(String? value) {
+static String? phoneNumberValidator(String? value) {
   if (value == null || value.trim().isEmpty) {
     return "Enter phone number please";
   }
-  if (value.trim().length != 10) {
+
+  final trimmed = value.trim();
+
+  if (trimmed.length != 10) {
     return "Phone number must be 10 digits";
   }
-  if (value.trim().startsWith('0')) {
-    return "Phone number should not start with 0";
+
+  // Check if starts with allowed prefixes
+  if (!RegExp(r'^(10|11|12|15)\d{8}$').hasMatch(trimmed)) {
+    return "Phone number must start with 10, 11, 12, or 15";
   }
+
   return null;
 }
+
 
 
 

@@ -20,7 +20,7 @@ class LoadingCircle extends StatelessWidget {
     Column(
       children: [
       
-        if (isLoading.value)
+        if (isLoading.value == true)
           Padding(
             padding: const EdgeInsets.only( bottom: 5),
             child: SizedBox(

@@ -6,8 +6,9 @@ import 'package:to_do_app/core/images/images_path.dart';
 import 'package:to_do_app/core/routes/custom_pages.dart';
 import 'package:to_do_app/core/text/custom_text.dart';
 import 'package:to_do_app/core/widgets/main_button.dart';
+import 'package:to_do_app/features/splash/controller/splash_controller.dart';
 
-class Splash2Screen extends StatelessWidget {
+class Splash2Screen extends GetView<SplashController> {
   const Splash2Screen({super.key});
 
   @override
@@ -33,7 +34,8 @@ class Splash2Screen extends StatelessWidget {
             child: MainButton(
               text: "Let’s Start",
               onPressed: () {
-                Get.toNamed(CustomPages.login);
+                controller.checkLogin();
+
               },
               backgroundColor: CustomColors.deepPurple,
               borderRadius: 12,

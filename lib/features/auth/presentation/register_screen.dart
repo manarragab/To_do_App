@@ -11,13 +11,15 @@ import 'package:to_do_app/core/widgets/loading_circle.dart';
 import 'package:to_do_app/core/widgets/main_button.dart';
 import 'package:to_do_app/features/auth/controller/login_controller.dart';
 
-class RegisterScreen extends GetWidget<LoginController> {
+class RegisterScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    LoginController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
+      body:  GetBuilder<LoginController>(builder: (_){
+      return ListView(
         children: [
           CustomImages.assetImage(
             ImagesPath.girly,
@@ -38,13 +40,15 @@ class RegisterScreen extends GetWidget<LoginController> {
                     )),
                 SizedBox(height: 20),
                 Form(
-                  key: _formKey,
+                 key: _formKey,
                   child: Column(
                     children: [
+                      
                       CustomTextField.nameField(
                         controller: controller.nameController,
                         onChanged: (val) {},
                       ),
+
                       SizedBox(height: 20),
                       CustomTextField.phoneNumberField(
                         controller: controller.phoneController,
@@ -103,11 +107,16 @@ CustomTextField.addressField(
                         child: MainButton(
                           text: "Sign Up",
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              controller.register();
-                            } else {
-                              print("Invalid phone number || password || name || level || address || number");
-                            }
+                        if (!_formKey.currentState!.validate()) {
+    print("Invalid phone number  password  name  level  address || number");
+    return;
+  }
+
+  if (controller.registerr != null) {
+    controller.register();
+  } else {
+    print("registerr is null");
+  }
                           },
                           backgroundColor: CustomColors.deepPurple,
                           borderRadius: 12,
@@ -151,7 +160,8 @@ CustomTextField.addressField(
             ),
           ),
         ],
-      ),
+      );
+      }),
     );
   }
 }
