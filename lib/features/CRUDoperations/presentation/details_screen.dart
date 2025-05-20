@@ -15,14 +15,21 @@ class DetailsScreen extends GetView<CrudController> {
   final String? desc;
   final String? status;
   final String? level;
+  final String? date;
 
   const DetailsScreen(
-      {super.key, this.image, this.title, this.desc, this.status, this.level});
+      {super.key,
+      this.image,
+      this.date,
+      this.title,
+      this.desc,
+      this.status,
+      this.level});
 
   @override
   Widget build(BuildContext context) {
-    final List<String> details =
-        (Get.arguments as List<String>?) ?? ["", "", "", "", ""];
+    final List<String?> rawDetails = Get.arguments as List<String?>? ?? [];
+final List<String> details = rawDetails.map((e) => e ?? "").toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -52,19 +59,19 @@ class DetailsScreen extends GetView<CrudController> {
                     color: CustomColors.darkGrey)),
             SizedBox(height: 15),
             CustomTextField.dateField(
-                controller: controller.dateController,
-                onChanged: (val) {
-                  controller.dateController.text = details[2];
-                },
+              controller: TextEditingController(text: details[4]),
+              onChanged: (val) {
+                controller.dateController.text = val;
+              },
               notPress: true,
-                color: CustomColors.lightPurple),
+              color: CustomColors.lightPurple,
+            ),
             SizedBox(height: 15),
             CustomTextField.dropDownField(
-            
-                controller: controller.dropDownController,
-               onChanged: (val) {
-                controller.dropDownController.text = details[3];
-               },
+                controller: TextEditingController(text: details[5]),
+                onChanged: (val) {
+                  controller.dropDownController.text = val;
+                },
                 color: CustomColors.lightPurple,
                 notPress: true,
                 suffixIcon: ImagesPath.downArrow,
@@ -76,9 +83,9 @@ class DetailsScreen extends GetView<CrudController> {
             CustomTextField.dropDownField(
               controller: controller.dropDownController2,
               onChanged: (val) {
-                controller.dropDownController2.text = details[4];
+                controller.dropDownController2.text = val;
               },
-          notPress: true,
+              notPress: true,
               color: CustomColors.lightPurple,
               suffixIcon: ImagesPath.downArrow,
               hint: "Level",

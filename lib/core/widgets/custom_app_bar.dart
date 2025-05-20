@@ -35,7 +35,7 @@ static PreferredSizeWidget homeAppBar(
               actions: [
                 TextButton(onPressed: () => Get.back(), child: Text("No")),
                 TextButton(onPressed: () async{
-  await UserRepo.logout(login);
+  await UserRepo.logout();
   Get.toNamed(CustomPages.register);
 
 

@@ -128,10 +128,17 @@ class AddTaskScreen extends GetView<CrudController> {
               LoadingCircle(
                 isLoading: controller.isLoading,
                 child: MainButton(
-                  text: "Add Task",
+                  text: controller.isEdit? "Update Task": "Add Task",
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                     if(controller.isEdit){
+                      controller.updatetaskFromForm();
+                      controller.update();
+                     }
+                     
+                     else{
                       controller.addTask();
+                     }
                      // controller.send();
                     } else {
                       print("Form not valid");

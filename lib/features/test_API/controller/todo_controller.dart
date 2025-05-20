@@ -41,16 +41,16 @@ bool isEdit = false;
   }
 
 //get,fetch
-  List<Alarms> alarms = [];
-  Future<void> fetchFamily() async {
-    try {
-      final data = await UserRepo.getAlarm();
-      alarms.assignAll(data.data ?? []);
-      update();
-    } catch (e) {
-      print('GET error: $e');
-    }
+ List<Alarms> alarms = [];
+Future<void> fetchFamily() async {
+  try {
+    final data = await UserRepo.getAlarm();
+    alarms.assignAll(data.data ?? []);
+    update();
+  } catch (e) {
+    print('GET error: $e');
   }
+}
 
 
 //add 
