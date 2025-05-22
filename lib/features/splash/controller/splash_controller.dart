@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:to_do_app/core/Dio_API_services/dio_api_services.dart';
 import 'package:to_do_app/core/routes/custom_pages.dart';
 
 class SplashController extends GetxController {
@@ -18,6 +19,7 @@ class SplashController extends GetxController {
 
   void checkLogin() async {
  token = await storage.read(key: 'access_token');
+ // await DioApiService.refreshToken(); 
     print("token :::::::::::::::: $token");
     if (token != null) {
       Get.offAllNamed(CustomPages.home);

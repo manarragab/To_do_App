@@ -58,9 +58,27 @@ class UserRepo {
     }
   }
 
-static Future<dynamic> updateTask(String id, Tasks task) async {
-    return await _api.put('/todos/$id', task.toJson());
+// static Future<dynamic> updateTask(String id, Tasks task) async {
+//     return await _api.put('/todos/$id', task.toJson());
+//   }
+
+
+static Future<Tasks?> updateTask(String id, Tasks task) async {
+  try {
+    final response = await _api.put('/todos/$id', task.toJson());
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return Tasks.fromJson(response.data);
+    } else {
+      print("Update failed with status: ${response.statusCode}");
+      return null;
+    }
+  } catch (e) {
+    print("Error updating task: $e");
+    return null;
   }
+}
+
 
   static Future<void> deleteTask(String id) async {
     await _api.delete('/todos/$id');

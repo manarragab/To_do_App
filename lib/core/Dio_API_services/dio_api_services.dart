@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:to_do_app/core/resources/consts_values.dart';
 
 // class DioApiService {
 //   final String baseUrl;
@@ -134,7 +135,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
  
 class DioApiService {
   final String baseUrl;
-  late Dio _dio;
+ static late Dio _dio;
   static final storage = FlutterSecureStorage();
 
   DioApiService({required this.baseUrl}) {
@@ -144,8 +145,8 @@ class DioApiService {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 20),
+      receiveTimeout: const Duration(seconds: 20),
       followRedirects: false,
       validateStatus: (status) => status != null && status < 500,
     ));
@@ -176,6 +177,10 @@ class DioApiService {
 
   static Future<void> deleteToken() async {
     await storage.delete(key: 'access_token');
+  }
+
+  static Future<void> getRefreskToken() async {
+    await storage.read(key: 'refresh_token');
   }
 
   Future<Response> register(String endpoint, Map<String, dynamic> data) async {
@@ -262,7 +267,7 @@ class DioApiService {
     }
   }
 
-  String _handleError(dynamic error) {
+ static String _handleError(dynamic error) {
     if (error is DioException) {
       if (error.response != null) {
         return 'خطأ: ${error.response?.statusCode} - ${error.response?.data}';
@@ -271,5 +276,22 @@ class DioApiService {
       }
     }
     return 'حدث خطأ غير متوقع: $error';
+  }
+
+
+    Future<Response> refreshToken() async {
+    try {
+      Response res = await _dio.get('/auth/refresh-token', queryParameters: {
+        'token':  await storage.read(key: 'refresh_token'),
+      });                      
+
+      if (res.data != null) {
+        return res.data[ConstsValues.accessToken];
+      } else {
+        throw Exception('Failed to refresh token');
+      }
+    } catch (e) {
+      throw _handleError(e);
+    }
   }
 }

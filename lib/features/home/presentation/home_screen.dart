@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeController controller = Get.find();
   CrudController crudController = Get.find();
   ResponsePostLogin login = ResponsePostLogin();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,35 +121,38 @@ class _HomeScreenState extends State<HomeScreen> {
                             crudController.tasks.length,
                             (index) => Container(
                                   child: CustomCard(
-                                    priority:
-                                        crudController.tasks[index].priority ??
-                                            "",
-                                    desc:
-                                        crudController.tasks[index].desc ?? "",
-                                    title:
-                                        crudController.tasks[index].title ?? "",
-                                    //  path: crudController.tasks[index].image,
-                                    status:
-                                        crudController.tasks[index].status ??
-                                            "",
-                                    date: crudController.tasks[index].createdAt
-                                            ?.substring(0, 10) ??
-                                        "",
-                                    //status: Status.values[controller.currentIndex].name,
-                                    delete: () {
-                                      crudController.deleteTask(
-                                          crudController.tasks[index].id ??
-                                              "0");
-                                      crudController.fetchTasks();
-                                      controller.update();
-                                    },
-                                   edit: () {
-  crudController.updateTask(crudController.tasks[index] , crudController.tasks[index].id ?? "");
-  crudController.fetchTasks();
-  controller.update();
-}
-
-                                  ),
+                                      priority: crudController
+                                              .tasks[index].priority ??
+                                          "",
+                                      desc: crudController.tasks[index].desc ??
+                                          "",
+                                      title:
+                                          crudController.tasks[index].title ??
+                                              "",
+                                      //  path: crudController.tasks[index].image,
+                                      status:
+                                          crudController.tasks[index].status ??
+                                              "",
+                                      date: crudController
+                                              .tasks[index].createdAt
+                                              ?.substring(0, 10) ??
+                                          "",
+                                      //status: Status.values[controller.currentIndex].name,
+                                      delete: () {
+                                        crudController.deleteTask(
+                                            crudController.tasks[index].id ??
+                                                "0");
+                                        crudController.fetchTasks();
+                                        controller.update();
+                                      },
+                                      edit: () {
+                                        crudController.updateTask(
+                                            crudController.tasks[index],
+                                            crudController.tasks[index].id ??
+                                                "");
+                                        crudController.fetchTasks();
+                                        controller.update();
+                                      }),
                                 )),
 
                       // if (controller.currentIndex == 1)

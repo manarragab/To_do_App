@@ -8,7 +8,6 @@ import 'package:to_do_app/data/models/tasks/get_tasks/get_task.dart';
 import 'package:to_do_app/data/models/tasks/post_task/post_task.dart';
 import 'package:to_do_app/data/models/tasks/post_task/response_post_task.dart';
 import 'package:to_do_app/features/CRUDoperations/presentation/add_task_screen.dart';
-import 'package:to_do_app/features/home/presentation/home_screen.dart';
 
 
 class CrudController extends GetxController {
@@ -61,7 +60,6 @@ tasks.insert(0, res);
     dateController2.clear();
     dropDownController2.clear();
      selectedImage.value = null;
-   
    }
 
 catch(e){
@@ -73,28 +71,39 @@ catch(e){
 
 void updateTask(Tasks task , String id) async {
   isEdit = true;
-   try{
-        titleController.text = task.title ?? "";
- descController.text = task.desc ?? "";
- dateController2.text=task.createdAt ?? "";
-dropDownController2.text=task.priority ?? "";
-image=task.image ?? "";
+  try {
+    // تعبئة الفورم بقيم المهمة الحالية
+    titleController.text = task.title ?? "";
+    descController.text = task.desc ?? "";
+    dateController2.text = task.createdAt?.substring(0, 10) ?? "";
+    dropDownController2.text = task.priority ?? "";
+    image = task.image ?? "";
 
+    // فتح شاشة التعديل وانتظار النتيجة
+    final result = await Get.to(AddTaskScreen(), arguments: [task, id]);
 
-  final result = await Get.to(AddTaskScreen(), arguments: [task, id]);
-    final response=await UserRepo.updateTask(id , result);
-print("Update response: ${response}");
-    int index = tasks.indexWhere((a) => a.id == id);
-    if (index != -1) {
-      tasks[index] = result;
-       await fetchTasks();
-      update();
-  }
-   }catch(e){
+    if (result != null && result is Tasks) {
+      final updated = await UserRepo.updateTask(id, result);
+      print("Update response: $updated");
+
+      if (updated != null) {
+        int index = tasks.indexWhere((a) => a.id == id);
+        if (index != -1) {
+          tasks[index] = updated;
+          update();
+          await fetchTasks();
+        }
+      } else {
+        print("حدث خطأ أثناء تحديث المهمة من السيرفر.");
+      }
+    } else {
+      print("تم الرجوع بدون تعديل المهمة");
+    }
+  } catch (e) {
     print("Update error: $e");
-
-   }
+  }
 }
+
 
 
 void updatetaskFromForm() async{
@@ -107,7 +116,7 @@ isEdit = true;
     desc: descController.text,
     priority: dropDownController2.text,
     createdAt: dateController2.text.substring(0, 10) ,
-    image: image,
+    image: image ,
     status: args[0].status
   );
   print("ddddddddddd  ${args[0].status}");

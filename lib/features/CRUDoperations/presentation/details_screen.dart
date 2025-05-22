@@ -26,6 +26,16 @@ class DetailsScreen extends GetView<CrudController> {
       this.status,
       this.level});
 
+
+//  arguments: [
+//                                             ImagesPath.baskett,
+//                                             title,
+//                                             desc,
+//                                             priority,
+//                                             date,
+//                                             status,
+//                                           ]);
+
   @override
   Widget build(BuildContext context) {
     final List<String?> rawDetails = Get.arguments as List<String?>? ?? [];
@@ -81,7 +91,7 @@ final List<String> details = rawDetails.map((e) => e ?? "").toList();
                 })),
             SizedBox(height: 15),
             CustomTextField.dropDownField(
-              controller: controller.dropDownController2,
+              controller: TextEditingController(text: details[3]),
               onChanged: (val) {
                 controller.dropDownController2.text = val;
               },
